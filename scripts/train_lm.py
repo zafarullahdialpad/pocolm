@@ -204,6 +204,7 @@ def CheckFreshness(tgt_file, ref_files):
 
     return False
 
+print('zafar repo')
 
 # get word counts
 word_counts_dir = os.path.join(work_dir, 'word_counts')
