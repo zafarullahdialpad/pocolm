@@ -360,7 +360,7 @@ if not CheckFreshness(done_file, last_done_files):
 else:
     log_file = os.path.join(log_dir, 'get_counts.log')
     LogMessage("Getting ngram counts... log in " + log_file)
-    print("_"*50)
+    print("_"*80)
     print("Running get_counts.py")
     command = "get_counts.py --min-counts='{0}' --max-memory={1} --limit-unk-history={5} {2} {3} {4}".format(
             args.min_counts, args.max_memory, int_dir, args.order, counts_dir,
@@ -414,6 +414,9 @@ else:
             TouchFile(done_file)
 
         # warm-start optimize metaparameters
+        print('-'*80)
+        print('Optimizing warm-start metaparameters')
+        warm_start_t0 = time.time()
         subset_optimize_dir = os.path.join(work_dir, "optimize_{0}_subset{1}".format(
             lm_name, args.warm_start_ratio))
         last_done_files = [done_file]
@@ -435,10 +438,16 @@ else:
             os.remove(os.path.join(subset_counts_dir, '.done'))
         warm_start_opt = ("--gradient-tolerance=0.0025 --progress-tolerance=1.0e-03 "
                           "--warm-start-dir=" + subset_optimize_dir)
+        warm_start_t1 = time.time()
+        print('Optimizing Warm-start Metaparameters done in ' + str(warm_start_t1 - warm_start_t0))
+        print('-' * 80)
     else:
         warm_start_opt = ""
 
     # optimize metaparameters
+    print('-'*80)
+    print('Optimizing metaparameters')
+    optimize_t0 = time.time()
     optimize_dir = os.path.join(work_dir, "optimize_{0}".format(lm_name))
     last_done_files = [done_file]
     done_file = os.path.join(optimize_dir, '.done')
@@ -458,6 +467,9 @@ else:
     LogMessage("You can set --bypass-metaparameter-optimization='{0}' "
                "to get equivalent results".format(
                    FormatMetaparameters(metaparameters)))
+    optimize_t1 = time.time()
+    print('Optimizing Metaparameters done in ' + str(optimize_t1-optimize_t0))
+    print('-'*80)
 t11 = time.time()
 print('Cleanup int data completed in ' + str(t11-t10))
 

@@ -142,6 +142,8 @@ if not os.path.exists(args.lm_dir + "/num_splits"):
 else:
     # reading num_splits shouldn't fail, we validated the directory.
     num_splits = int(open(args.lm_dir + "/num_splits").readline())
+    print("-" * 100)
+    print("Num splits in format_arpa_lm.py = " + str(num_splits))
     if args.max_memory == '':
         mem_opt = ''
     else:

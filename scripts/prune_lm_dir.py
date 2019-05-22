@@ -119,6 +119,8 @@ if os.path.exists(args.lm_dir_in + "/num_splits"):
     f = open(args.lm_dir_in + "/num_splits")
     num_splits = int(f.readline())
     f.close()
+print('-'*100)
+print("Num splits in prune_lm_dir.py = " + str(num_splits))
 
 work_dir = args.lm_dir_out + "/work"
 
