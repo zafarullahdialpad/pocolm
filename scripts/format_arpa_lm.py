@@ -52,8 +52,8 @@ if not os.path.isdir(args.temp_dir):
     sys.exit("format_arpa_lm.py: expected directory {0} to exist.".format(
             args.temp_dir))
 
-print('Inside format_arpa_lm.py script')
-print('-'*100)
+print('Inside format_arpa_lm.py script', file=sys.stderr)
+print('-'*100, file=sys.stderr)
 t0 = time.time()
 
 # verify the input string max_memory
@@ -147,8 +147,8 @@ if not os.path.exists(args.lm_dir + "/num_splits"):
 else:
     # reading num_splits shouldn't fail, we validated the directory.
     num_splits = int(open(args.lm_dir + "/num_splits").readline())
-    print("-" * 100)
-    print("Num splits in format_arpa_lm.py = " + str(num_splits))
+    print("-" * 100, file=sys.stderr)
+    print("Num splits in format_arpa_lm.py = " + str(num_splits), file=sys.stderr)
     if args.max_memory == '':
         mem_opt = ''
     else:
@@ -182,6 +182,6 @@ print("format_arpa_lm.py: succeeded formatting ARPA lm from {0}".format(args.lm_
       file=sys.stderr)
 
 t1 = time.time()
-print('Total time formatting to ARPA = ' + str(t1-t0))
-print('-'*100)
+print('Total time formatting to ARPA = ' + str(t1-t0), file=sys.stderr)
+print('-'*100, file=sys.stderr)
 
