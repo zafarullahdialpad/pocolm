@@ -5,6 +5,7 @@ from __future__ import print_function
 import os
 import argparse
 import sys
+import time
 import subprocess
 import glob
 
@@ -50,6 +51,10 @@ if os.system("validate_lm_dir.py " + args.lm_dir) != 0:
 if not os.path.isdir(args.temp_dir):
     sys.exit("format_arpa_lm.py: expected directory {0} to exist.".format(
             args.temp_dir))
+
+print('Inside format_arpa_lm.py script')
+print('-'*100)
+t0 = time.time()
 
 # verify the input string max_memory
 if args.max_memory != '':
@@ -175,3 +180,8 @@ if len(glob.glob("{lm_dir}/.*.error".format(lm_dir=args.lm_dir))) > 0:
 
 print("format_arpa_lm.py: succeeded formatting ARPA lm from {0}".format(args.lm_dir),
       file=sys.stderr)
+
+t1 = time.time()
+print('Total time formatting to ARPA = ' + t1-t0)
+print('-'*100)
+

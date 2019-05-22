@@ -5,6 +5,7 @@ from __future__ import print_function
 import os
 import argparse
 import sys
+import time
 import subprocess
 import shutil
 import threading
@@ -87,6 +88,10 @@ os.environ['PATH'] = (os.environ['PATH'] + os.pathsep +
 
 if os.system("validate_lm_dir.py " + args.lm_dir_in) != 0:
     ExitProgram("failed to validate input LM-dir")
+
+print('Inside prune_lm_dir.py script')
+print('-'*100)
+t0 = time.time()
 
 # verify the input string max_memory
 if args.max_memory != '':
@@ -615,3 +620,7 @@ if args.cleanup == 'true':
 
 if os.system("validate_lm_dir.py " + args.lm_dir_out) != 0:
     ExitProgram("failed to validate output LM-dir")
+
+t1 = time.time()
+print('Total time pruning = ' + t1-t0)
+print('-'*100)
