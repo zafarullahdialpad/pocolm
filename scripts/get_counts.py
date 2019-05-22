@@ -515,6 +515,8 @@ if args.min_counts == '':
     threads = []
     if args.max_memory != '':
         if args.dump_counts_parallel == 'true':
+            print('Dividing Memory')
+            print("_"*50)
             max_mem = DivideMemory(args.max_memory, num_train_sets + 1)
         else:
             max_mem = args.max_memory

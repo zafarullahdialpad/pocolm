@@ -324,6 +324,8 @@ if not CheckFreshness(done_file, last_done_files):
 else:
     log_file = os.path.join(log_dir, 'get_counts.log')
     LogMessage("Getting ngram counts... log in " + log_file)
+    print("_"*50)
+    print("Running get_counts.py")
     command = "get_counts.py --min-counts='{0}' --max-memory={1} --limit-unk-history={5} {2} {3} {4}".format(
             args.min_counts, args.max_memory, int_dir, args.order, counts_dir,
             args.limit_unk_history)
