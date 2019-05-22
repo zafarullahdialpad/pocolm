@@ -13,6 +13,10 @@ import subprocess
 sys.path = [os.path.abspath(os.path.dirname(sys.argv[0])) + "/internal"] + sys.path
 
 # for LogMessage and RunCommand
+
+import time
+
+
 from pocolm_common import RunCommand
 from pocolm_common import LogMessage
 from pocolm_common import TouchFile
@@ -204,9 +208,15 @@ def CheckFreshness(tgt_file, ref_files):
 
     return False
 
-print('zafar repo')
+print('This is zafar\'s fork of pocolm. You are running train_lm.py')
+print('Max memory allocated = ' + str(args.max_memory))
+print('Num splits = ' + str(args.num_splits))
 
 # get word counts
+########################################################################################################################
+print('-'*100)
+print('Getting word counts started')
+t0 = time.time()
 word_counts_dir = os.path.join(work_dir, 'word_counts')
 if os.system("validate_text_dir.py " + args.text_dir) != 0:
     sys.exit(1)
@@ -223,8 +233,14 @@ else:
     command = "get_word_counts.py {0} {1}".format(args.text_dir, word_counts_dir)
     RunCommand(command, log_file, args.verbose == 'true')
     TouchFile(done_file)
+t1 = time.time()
+print('Getting word counts completed in ' + str(t1-t0))
 
 # get unigram weights
+########################################################################################################################
+print('-'*100)
+print('Getting unigram weights started')
+t2 = time.time()
 unigram_weights = os.path.join(args.text_dir, 'unigram_weights')
 last_done_files = [done_file]
 done_file = os.path.join(work_dir, '.unigram_weights.done')
@@ -236,8 +252,15 @@ else:
     command = "get_unigram_weights.py {0} > {1}".format(word_counts_dir, unigram_weights)
     RunCommand(command, log_file, args.verbose == 'true')
     TouchFile(done_file)
+t3 = time.time()
+print('Getting unigram weights completed in ' + str(t3-t2))
+
 
 # generate vocab
+########################################################################################################################
+print('-'*100)
+print('Generating vocab started')
+t4 = time.time()
 vocab_name = ''
 vocab = ''
 if args.wordlist is None:
@@ -295,8 +318,14 @@ else:
         command = "wordlist_to_vocab.py {0} > {1}".format(args.wordlist, vocab)
         RunCommand(command, log_file, args.verbose == 'true')
         TouchFile(done_file)
+t5 = time.time()
+print('Generating vocab completed in ' + str(t5-t4))
 
 # preparing int data
+########################################################################################################################
+print('-'*100)
+print('Preparing int data started')
+t6 = time.time()
 int_dir = os.path.join(work_dir, 'int_' + vocab_name)
 last_done_files = [done_file]
 done_file = os.path.join(int_dir, '.done')
@@ -308,8 +337,14 @@ else:
     command = "prepare_int_data.py {0} {1} {2}".format(args.text_dir, vocab, int_dir)
     RunCommand(command, log_file, args.verbose == 'true')
     TouchFile(done_file)
+t7 = time.time()
+print('Preparing int data completed in ' + str(t7-t6))
 
 # get ngram counts
+########################################################################################################################
+print('-'*100)
+print('Getting ngram counts started')
+t8 = time.time()
 lm_name = vocab_name + '_' + str(args.order)
 if args.min_counts != '':
     # replace '=' to '-', since '=' need to be escaped in shell
@@ -332,8 +367,14 @@ else:
             args.limit_unk_history)
     RunCommand(command, log_file, args.verbose == 'true')
     TouchFile(done_file)
+t9 = time.time()
+print('Getting ngram counts completed in ' + str(t9-t8))
 
 # cleanup int dir
+########################################################################################################################
+print('-'*100)
+print('Cleanup int dir started')
+t10 = time.time()
 if args.cleanup == 'true' and args.keep_int_data == 'false':
     if os.system("cleanup_int_dir.py " + int_dir) != 0:
         sys.exit("train_lm.py: failed to cleanup int dir: " + int_dir)
@@ -417,8 +458,14 @@ else:
     LogMessage("You can set --bypass-metaparameter-optimization='{0}' "
                "to get equivalent results".format(
                    FormatMetaparameters(metaparameters)))
+t11 = time.time()
+print('Cleanup int data completed in ' + str(t11-t10))
 
 # make lm dir
+########################################################################################################################
+print('-'*100)
+print('make lm dir started')
+t12 = time.time()
 if args.lm_dir != '':
     lm_dir = args.lm_dir
 else:
@@ -440,8 +487,14 @@ else:
             args.num_splits, ' '.join(opts), counts_dir, metaparam_file, lm_dir, args.cleanup)
     RunCommand(command, log_file, args.verbose == 'true')
     TouchFile(done_file)
+t13 = time.time()
+print('make lm dir completed in ' + str(t13-t12))
 
 # cleanup subset counts dir
+########################################################################################################################
+print('-'*100)
+print('cleanup subset counts dir started')
+t14 = time.time()
 if args.cleanup == 'true':
     if os.system("cleanup_count_dir.py " + counts_dir) != 0:
         sys.exit("train_lm.py: failed to cleanup count dir: " + counts_dir)
@@ -456,6 +509,10 @@ for order in range(len(num_ngrams) - 2):
     line += str(num_ngrams[order]) + ' + '
 line += str(num_ngrams[-2]) + ' = ' + str(num_ngrams[-1])
 LogMessage("" + line)
+t15 = time.time()
+print('cleanup subset counts dir completed in ' + str(t15-t14))
+
+print("TOTAL TIME ELAPSED = " + str(t15-t0))
 
 LogMessage("Success to train lm, output dir is {0}.".format(lm_dir))
 LogMessage("You may call format_arpa_lm.py to get ARPA-format lm, ")
