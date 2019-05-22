@@ -182,6 +182,6 @@ print("format_arpa_lm.py: succeeded formatting ARPA lm from {0}".format(args.lm_
       file=sys.stderr)
 
 t1 = time.time()
-print('Total time formatting to ARPA = ' + t1-t0)
+print('Total time formatting to ARPA = ' + str(t1-t0))
 print('-'*100)
 

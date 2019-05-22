@@ -622,5 +622,5 @@ if os.system("validate_lm_dir.py " + args.lm_dir_out) != 0:
     ExitProgram("failed to validate output LM-dir")
 
 t1 = time.time()
-print('Total time pruning = ' + t1-t0)
+print('Total time pruning = ' + str(t1-t0))
 print('-'*100)
