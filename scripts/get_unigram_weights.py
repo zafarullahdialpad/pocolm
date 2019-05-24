@@ -38,7 +38,7 @@ def ReadCountsFile(counts_file):
         sys.exit("Failed to open {0} for reading".format(counts_file))
     word_to_count = defaultdict(int)
     for line in f:
-        for word in line.split():
+        for word in line.strip().split():
             try:
                 if len(word) != 2:
                     print('more than 2 words', file=sys.stderr)
