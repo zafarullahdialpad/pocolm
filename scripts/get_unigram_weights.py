@@ -44,7 +44,7 @@ def ReadCountsFile(counts_file):
           print(line, file=sys.stderr)
           print(words, file=sys.stderr)
           continue
-        word_to_count[word[1]] += int(word[0])
+        word_to_count[words[1]] += int(words[0])
         
     f.close()
     return word_to_count
